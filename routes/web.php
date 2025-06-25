@@ -40,6 +40,9 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
     // CRUD Menu
     Route::resource('products', AdminProductController::class);
 
+    // CRUD User (Kasir)
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
+
     // Kelola Order
     Route::get('orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::patch('orders/{order}/update-status', [AdminOrderController::class, 'updateStatus'])->name('orders.updateStatus');

@@ -16,28 +16,6 @@
         .header-main { background-color: #ffffff; padding: 1rem 0; text-align: center; margin-bottom: 2rem; border-bottom: 3px solid #0d6efd; }
         .header-main h1 { color: #0d6efd; font-weight: 700; }
         .cart-icon { position: fixed; bottom: 20px; right: 20px; z-index: 1000; }
-        html { scroll-behavior: smooth;}
-
-        .logo-kabita {
-            width: 160px;
-            max-width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Responsive scaling jika diperlukan */
-        @media (min-width: 768px) {
-            .logo-kabita {
-                width: 140px;
-            }
-        }
-
-        @media (min-width: 992px) {
-            .logo-kabita {
-                width: 180px;
-            }
-        }
-
     </style>
 </head>
 <body>
@@ -46,6 +24,10 @@
         <div class="container d-flex justify-content-between align-items-center">
             <!-- Kiri: Judul -->
             <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+            <img src="{{ asset('images/logo/logo-kabita.png') }}"
+                alt="Logo Kabita"
+                class="me-3"
+                style="height: 48px; width: auto;">
             <span class="fs-3 fw-bold">Kabita Food</span>
             </a>
             
@@ -73,33 +55,6 @@
         @if(session('error'))
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
-
-            <!-- ------------------------ Menu Hero Section ------------------------ -->
-    <section>
-        <div class="container">
-            <div class="mt-4 mt-md-0 mb-3 bg-primary text-white rounded-3">
-                <div class="container-fluid">
-                    <div class="row align-items-center">
-                        <div class="col-md-8 p-5 my-auto align-center">
-                            <h1 class="display-5 fw-bold">Katalog Menu Makanan & Minuman Kabita Food</h1>
-                            <p class="col-md-10">
-                                Disini kalian bisa nemuin semua menu dengan berbagai macam kategori yang dapat kalian
-                                pesan
-                                di restoran kami, scroll kebawah ya!
-                            </p>
-                            <a href="{{ route('customer.menu.index') }}#menu-section" class="btn btn-outline-light text-white px-4 fw-bold">
-                                Lihat semua &nbsp; <i class="bi bi-arrow-down-circle-fill"></i>
-                            </a>
-                        </div>
-                        <div class="col-md-4 my-auto p-0">
-                            <img src="{{ url('images/logo/logo-kabita.png') }}"
-                                class="img-fluid logo-kabita d-none d-md-block mx-auto" />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
         @yield('content')
 

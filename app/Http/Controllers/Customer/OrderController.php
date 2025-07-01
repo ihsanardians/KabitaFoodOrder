@@ -8,9 +8,13 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; // Import Carbon untuk bekerja dengan tanggal
+use Illuminate\Support\Facades\Http;
+
+
 
 class OrderController extends Controller
 {
+    
     public function store(Request $request)
     {
         // 1. Validasi input dari form

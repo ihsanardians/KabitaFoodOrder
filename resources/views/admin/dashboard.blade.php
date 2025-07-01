@@ -35,11 +35,12 @@
                                     <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                     <td>
                                         {{-- Form untuk update status, akan kita fungsikan nanti --}}
-                                        <form action="#" method="POST">
-                                            @csrf
-                                            @method('PATCH')
-                                            <button type="submit" class="btn btn-sm btn-success">Selesaikan</button>
-                                        </form>
+                                       <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
+                                    </form>
+
                                     </td>
                                 </tr>
                             @empty

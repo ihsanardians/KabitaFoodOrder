@@ -33,7 +33,7 @@ class ProductController extends Controller
         // 1. Validasi data
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|in:makanan,minuman,snack',
+            'category' => 'required|in:Dessert,Main Course,Add On',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048' // max 2MB

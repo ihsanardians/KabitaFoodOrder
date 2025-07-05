@@ -33,8 +33,8 @@
                             <td>{{ ucfirst($product->category) }}</td>
                             <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                             <td>
-                                <a href="#" class="btn btn-sm btn-warning">Edit</a>
-                                <form action="#" method="POST" class="d-inline">
+                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
+                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Anda yakin ingin menghapus produk ini?')">Hapus</button>

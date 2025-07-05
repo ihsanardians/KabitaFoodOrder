@@ -28,6 +28,9 @@ Route::group(['as' => 'customer.'], function () {
     Route::post('/order', [CustomerOrderController::class, 'store'])->name('order.store');
     // BARIS INI SUDAH DIPERBAIKI (tidak ada titik tambahan)
     Route::get('/order/success/{order}', [CustomerOrderController::class, 'success'])->name('order.success');
+
+    // //pdf invoice
+    // Route::get('/order/success/{order}/invoice', [CustomerOrderController::class, 'invoice'])->name('customer.order.invoice');
 });
 
 // Laravel Auth routes
@@ -49,4 +52,17 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
 
     // Rekap Penjualan
     Route::get('sales-recap', [AdminOrderController::class, 'recap'])->name('sales.recap');
+
+    //delete
+    Route::delete('admin/products/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+
+    //edit menu
+    // Untuk menampilkan form edit
+    Route::get('admin/products/{id}/edit', [AdminProductController::class, 'edit'])->name('admin.products.edit');
+
+    // Untuk menyimpan perubahan
+    Route::put('admin/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
+
+    
+
 });

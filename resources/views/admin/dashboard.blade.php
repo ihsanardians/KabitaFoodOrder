@@ -127,6 +127,7 @@
                                                 <i class="bi bi-check-circle-fill"></i> Selesaikan
                                             </button>
                                         </form>
+
                                     </td>
                                     <td><strong>Detail Pesanan:</strong>
                                         <ul class="product-list">
@@ -142,6 +143,7 @@
                                 <tr>
                                     <td colspan="6" class="bg-light">
                                         
+
                                     </td>
                                 </tr>
                             @empty

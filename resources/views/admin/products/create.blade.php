@@ -54,7 +54,7 @@
 </style>
 
 <div class="container">
-    <h1 class="page-header">Tambah Produk Baru</h1>
+    <h1 class="page-header text-center">Tambah Produk Baru</h1>
 
     <div class="card form-card">
         <div class="card-body">
@@ -70,9 +70,9 @@
                     <label for="category" class="form-label">Kategori</label>
                     <select class="form-select" id="category" name="category" required>
                         <option value="" disabled selected>Pilih kategori</option>
-                        <option value="makanan">Makanan</option>
-                        <option value="minuman">Minuman</option>
-                        <option value="snack">Snack</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Main Course">Main Course</option>
+                        <option value="Add On">Add On</option>
                     </select>
                 </div>
 

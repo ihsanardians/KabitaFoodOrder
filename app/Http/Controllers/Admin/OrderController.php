@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Customer;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -69,4 +69,45 @@ class OrderController extends Controller
     {
         return view('customer.success', compact('order'));
     }
+
+    //recap transaksi
+   public function recap(Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        $query = \App\Models\Order::query();
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($startDate)->startOfDay(),
+                Carbon::parse($endDate)->endOfDay()
+            ]);
+        }
+
+        $totalOrders = $query->count();
+        $totalIncome = $query->sum('total_price');
+
+        $salesByDate = Order::selectRaw('DATE(created_at) as date, SUM(total_price) as total')
+            ->groupBy('date')
+            ->orderBy('date', 'desc') 
+            ->get();
+
+        $allOrders = $query->orderBy('created_at', 'asc')->get();
+
+        return view('admin.recap', compact(
+            'totalOrders', 'totalIncome', 'salesByDate', 'allOrders'
+        ));
+    }
+
+    //selesaikan pesanan
+    public function updateStatus(Order $order)
+    {
+        $order->update([
+            'status' => 'selesai'
+        ]);
+
+        return redirect()->back()->with('success', 'Pesanan telah diselesaikan.');
+    }
+
 }

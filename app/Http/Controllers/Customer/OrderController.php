@@ -9,11 +9,35 @@ use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; // Import Carbon untuk bekerja dengan tanggal
 use Illuminate\Support\Facades\Http;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 
 class OrderController extends Controller
 {
+    // private function sendWhatsApp($name, $phone, $order)
+    // {
+    //     $token = '63jffwm6PJvZbuHfEazAmi5ZvBDnhiNOu2nFl1kYQT8m3vp7zOF0CkK'; // ganti dengan token dari akun Wablas Anda
+    //     $url = 'https://sby.wablas.com/api/send-message'; // Endpoint API Wablas
+
+    //     // Format nomor HP: ubah awalan 0 jadi 62
+    //     $phone = preg_replace('/^0/', '62', $phone);
+
+    //     $message = "Halo *$name*,\n"
+    //             . "Terima kasih atas pesanan Anda di *FoodCourt Kami*.\n\n"
+    //             . "🧾 *Nomor Antrian:* {$order->queue_number}\n"
+    //             . "💰 *Total:* Rp " . number_format($order->total_price, 0, ',', '.') . "\n\n"
+    //             . "Silakan tunggu pesanan Anda diproses. 🙏";
+
+    //     Http::withHeaders([
+    //         'Authorization' => $token,
+    //     ])->post($url, [
+    //         'phone' => $phone,
+    //         'message' => $message,
+    //         'secret' => false,
+    //         'priority' => true,
+    //     ]);
+    // }
     
     public function store(Request $request)
     {
@@ -62,19 +86,32 @@ class OrderController extends Controller
             DB::commit();
             session()->forget('cart');
 
+            // // ✅ Kirim WhatsApp
+            // $this->sendWhatsApp($request->customer_name, $request->customer_phone, $order);
+
             return redirect()->route('customer.order.success', $order->id);
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            // Opsional: catat error untuk debugging
-            // Log::error($e->getMessage());
-            return redirect()->route('customer.cart.index')->with('error', 'Terjadi kesalahan saat memproses pesanan.');
-        }
+    DB::rollBack();
+    return redirect()->route('customer.cart.index')->with('error', 'Error: ' . $e->getMessage());
+}
+
     }
+
+    
+
 
     public function success(Order $order)
     {
         // Tidak ada perubahan di sini, hanya view-nya yang akan kita ubah
         return view('customer.success', compact('order'));
     }
+
+    //pdf invoice
+    // public function invoice(Order $order)
+    // {
+    //     $order->load('orders'); // Load relasi produk
+    //     $pdf = PDF::loadView('customer.pdf_invoice', compact('order'));
+    //     return $pdf->download('invoice-' . $order->id . '.pdf');
+    // }
 }

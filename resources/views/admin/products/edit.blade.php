@@ -51,49 +51,61 @@
     .form-control[type="file"] {
         padding: 0.5rem;
     }
+
+    .preview-img {
+        max-width: 120px;
+        border-radius: 10px;
+        margin-top: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    }
 </style>
 
 <div class="container">
-    <h1 class="page-header text-center">Tambah Produk Baru</h1>
-
+    <h1 class="page-header text-center">Edit Produk</h1>
     <div class="card form-card">
         <div class="card-body">
-            <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
+                @method('PUT')
 
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Produk</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ $product->name }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="category" class="form-label">Kategori</label>
                     <select class="form-select" id="category" name="category" required>
-                        <option value="" disabled selected>Pilih kategori</option>
-                        <option value="Dessert">Dessert</option>
-                        <option value="Main Course">Main Course</option>
-                        <option value="Add On">Add On</option>
+                        <option value="Main Course" {{ $product->category == 'Main Course' ? 'selected' : '' }}>Main Course</option>
+                        <option value="Add On" {{ $product->category == 'Add On' ? 'selected' : '' }}>Add On</option>
+                        <option value="Dessert" {{ $product->category == 'Dessert' ? 'selected' : '' }}>Dessert</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
                     <label for="price" class="form-label">Harga</label>
-                    <input type="number" class="form-control" id="price" name="price" required>
+                    <input type="number" class="form-control" id="price" name="price" value="{{ $product->price }}" required>
                 </div>
 
                 <div class="mb-3">
                     <label for="description" class="form-label">Deskripsi</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="3">{{ $product->description }}</textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="image" class="form-label">Gambar Produk</label>
-                    <input class="form-control" type="file" id="image" name="image" required>
+                    <input class="form-control" type="file" id="image" name="image">
+                    @if ($product->image)
+                        <div>
+                            <p class="mt-2 mb-1">Gambar Saat Ini:</p>
+                            <img src="{{ asset('storage/' . $product->image) }}" alt="Gambar Produk" class="preview-img">
+                        </div>
+                    @endif
                 </div>
 
                 <div class="d-flex gap-2 mt-4">
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-save me-1"></i> Simpan Produk
+                        <i class="bi bi-save me-1"></i> Simpan Perubahan
                     </button>
                     <a href="{{ route('admin.products.index') }}" class="btn btn-secondary">
                         <i class="bi bi-arrow-left me-1"></i> Batal

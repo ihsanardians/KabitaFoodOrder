@@ -2,9 +2,31 @@
 @section('title', 'Keranjang Belanja')
 
 @section('content')
+<style>
+
+    /* Animasi Fade In */
+    @keyframes fadeIn {x
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Tombol Gradasi Modern */
+    .btn-gradient-blue {
+        background: linear-gradient(135deg, #0d6efd, #6610f2);
+        color: #fff;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gradient-blue:hover {
+        box-shadow: 0 8px 20px rgba(13, 110, 253, 0.4);
+        transform: translateY(-2px);
+    }
+
+</style>
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
-        <h3 class="mb-0"><i class="bi bi-cart3"></i> Keranjang Anda</h3>
+        <h3 class="mb-0"><i class="bi bi-cart-fill"></i> &nbsp; Keranjang Anda</h3>
     </div>
     <div class="card-body">
         @if(!empty($cart))
@@ -47,27 +69,29 @@
             </div>
             <hr>
             {{-- Ganti form lama dengan ini --}}
-<div class="mt-4">
-    <h4>Lengkapi Data Pemesan</h4>
-    <form action="{{ route('customer.order.store') }}" method="POST">
-        @csrf
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="customer_name" class="form-label fw-bold">Nama Anda</label>
-                <input type="text" name="customer_name" id="customer_name" class="form-control" placeholder="Masukkan nama Anda" required>
+    <div class="mt-5">
+    <div class="card shadow-lg border-0 rounded-4 p-4 bg-white" style="animation: fadeIn 0.5s ease-in-out;">
+        <h4 class="fw-bold mb-4 text-primary-emphasis"><i class="bi bi-person-vcard"></i> Lengkapi Data Pemesan</h4>
+        <form action="{{ route('customer.order.store') }}" method="POST">
+            @csrf
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="customer_name" class="form-label">Nama Anda</label>
+                    <input type="text" name="customer_name" id="customer_name" class="form-control form-control-lg rounded-pill" placeholder="Masukkan nama Anda" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="customer_phone" class="form-label">Nomor HP</label>
+                    <input type="tel" name="customer_phone" id="customer_phone" class="form-control form-control-lg rounded-pill" placeholder="Contoh: 08123456789" required>
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <label for="customer_phone" class="form-label fw-bold">Nomor HP</label>
-                <input type="tel" name="customer_phone" id="customer_phone" class="form-control" placeholder="Contoh: 08123456789" required>
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-gradient-blue btn-lg rounded-pill">
+                    <i class="bi bi-check-circle-fill me-1"></i> Dapatkan Nomor Antrian & Pesan
+                </button>
             </div>
-        </div>
-        <div class="d-grid mt-3">
-            <button type="submit" class="btn btn-success btn-lg">
-                <i class="bi bi-check-circle-fill"></i> Dapatkan Nomor Antrian & Pesan
-            </button>
-        </div>
-    </form>
-</div>
+        </form>
+    </div>
+    </div>
         @else
             <div class="text-center py-5">
                 <i class="bi bi-cart-x" style="font-size: 5rem; color: #ccc;"></i>

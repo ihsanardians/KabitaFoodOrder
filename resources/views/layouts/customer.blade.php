@@ -46,6 +46,10 @@
         <div class="container d-flex justify-content-between align-items-center">
             <!-- Kiri: Judul -->
             <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
+            <img src="{{ asset('images/logo/logo-kabita.png') }}"
+                alt="Logo Kabita"
+                class="me-3"
+                style="height: 48px; width: auto;">
             <span class="fs-3 fw-bold">Kabita Food</span>
             </a>
             
@@ -93,12 +97,15 @@
                         </div>
                         <div class="col-md-4 my-auto p-0">
                             <img src="{{ url('images/logo/logo-kabita.png') }}"
-                                class="img-fluid logo-kabita d-none d-md-block mx-auto" />
+                                alt="Logo Kabita"
+                                class="d-block mx-auto"
+                                style="width: 160px; height: auto;" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
     </section>
 
         @yield('content')

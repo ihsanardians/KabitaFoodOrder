@@ -103,11 +103,23 @@ class OrderController extends Controller
     //selesaikan pesanan
     public function updateStatus(Order $order)
     {
+        // Update status pesanan menjadi 'selesai'
         $order->update([
             'status' => 'selesai'
         ]);
 
-        return redirect()->back()->with('success', 'Pesanan telah diselesaikan.');
+        // Format nomor WhatsApp (ubah 08xxx menjadi 628xxx)
+        $phone = preg_replace('/^0/', '62', $order->customer_phone);
+
+        // Pesan yang dikirim ke WhatsApp
+        $message = "Halo {$order->customer_name}, pesanan Anda dengan nomor antrian {$order->queue_number} telah selesai. \n\nSilahkan Ambil Pesanan Kamu di Kasir \n\nSilahkan menikmati hidangan kami 🙏😊";
+
+        // Arahkan ke WhatsApp Web
+        return redirect()->away("https://wa.me/{$phone}?text=" . urlencode($message));
     }
+
+
+    //wa selesai pesanan
+    
 
 }

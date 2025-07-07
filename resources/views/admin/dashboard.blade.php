@@ -73,6 +73,11 @@
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+    .product-list {
+        padding-left: 1rem;
+        margin-bottom: 0;
+    }
 </style>
 
 <div class="container">
@@ -98,13 +103,13 @@
                                 <th>No. Antrian</th>
                                 <th>Waktu Pesan</th>
                                 <th>Total</th>
-                                <th width="15%">Aksi</th>
+                                <th>Aksi</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($orders as $order)
                                 <tr>
-
                                     <td class="text-center">#{{ $order->id }}</td>
                                     <td class="text-center">{{ $order->customer_name }}</td>
                                     <td class="text-center">
@@ -115,28 +120,28 @@
                                     <td class="text-center">{{ $order->created_at->format('H:i:s') }}</td>
                                     <td class="text-center">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                     <td class="text-center">
-                                        <form action="#" method="POST">
+                                        <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="btn btn-finish">
                                                 <i class="bi bi-check-circle-fill"></i> Selesaikan
                                             </button>
                                         </form>
-
-                                    <td>#{{ $order->id }}</td>
-                                    <td>{{ $order->customer_name }}</td>
-                                    <td><span class="badge bg-success fs-5">{{ $order->queue_number }}</span></td>
-                                    <td>{{ $order->created_at->format('H:i:s') }}</td>
-                                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-                                    <td>
-                                        {{-- Form untuk update status, akan kita fungsikan nanti --}}
-                                       <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
-                                    </form>
-
-
+                                    </td>
+                                    <td><strong>Detail Pesanan:</strong>
+                                        <ul class="product-list">
+                                            @foreach ($order->items as $item)
+                                                <li>
+                                                    {{ $item->product->name }} —
+                                                    {{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }} =
+                                                    Rp {{ number_format($item->quantity * $item->product->price, 0, ',', '.') }}
+                                                </li>
+                                            @endforeach
+                                        </ul></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="bg-light">
+                                        
                                     </td>
                                 </tr>
                             @empty
@@ -146,6 +151,7 @@
                             @endforelse
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>

@@ -63,38 +63,40 @@ class OrderController extends Controller
             $totalPrice += $details['price'] * $details['quantity'];
         }
 
+        
+
         DB::beginTransaction();
         try {
-            // 3. Simpan order dengan data baru
             $order = Order::create([
                 'customer_name' => $request->customer_name,
                 'customer_phone' => $request->customer_phone,
-                'queue_number' => $queueNumber, // Simpan nomor antrian
+                'queue_number' => $queueNumber,
                 'total_price' => $totalPrice,
                 'status' => 'diproses'
             ]);
 
             foreach ($cart as $id => $details) {
+                $product = \App\Models\Product::find($id); // ambil data produk
+
+                //dd($product->name);
                 OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $id,
-                    'quantity' => $details['quantity'],
-                    'price' => $details['price']
+                    'order_id'     => $order->id,
+                    'product_id'   => $id,
+                    'product_name' => $product->name, // ambil nama dari database
+                    'quantity'     => $details['quantity'],
+                    'price'        => $details['price']
                 ]);
             }
 
             DB::commit();
             session()->forget('cart');
 
-            // // ✅ Kirim WhatsApp
-            // $this->sendWhatsApp($request->customer_name, $request->customer_phone, $order);
-
             return redirect()->route('customer.order.success', $order->id);
-
         } catch (\Exception $e) {
-    DB::rollBack();
-    return redirect()->route('customer.cart.index')->with('error', 'Error: ' . $e->getMessage());
-}
+            DB::rollBack();
+            return redirect()->route('customer.cart.index')->with('error', 'Error: ' . $e->getMessage());
+        }
+
 
     }
 
@@ -107,11 +109,14 @@ class OrderController extends Controller
         return view('customer.success', compact('order'));
     }
 
-    //pdf invoice
-    // public function invoice(Order $order)
-    // {
-    //     $order->load('orders'); // Load relasi produk
-    //     $pdf = PDF::loadView('customer.pdf_invoice', compact('order'));
-    //     return $pdf->download('invoice-' . $order->id . '.pdf');
-    // }
+    public function invoice($id)
+    {
+        $order = Order::findOrFail($id);
+        $order = Order::with('items.product')->findOrFail($id);
+
+
+        $pdf = Pdf::loadView('customer.pdf_invoice', compact('order'))->setPaper('A5', 'portrait');
+        return $pdf->stream("invoice-pesanan-{$order->id}.pdf");
+    }
+
 }

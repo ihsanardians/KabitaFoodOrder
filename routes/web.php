@@ -25,12 +25,11 @@ Route::group(['as' => 'customer.'], function () {
     Route::get('/cart/remove/{product}', [CustomerCartController::class, 'remove'])->name('cart.remove');
 
     // Order
-    Route::post('/order', [CustomerOrderController::class, 'store'])->name('order.store');
-    // BARIS INI SUDAH DIPERBAIKI (tidak ada titik tambahan)
-    Route::get('/order/success/{order}', [CustomerOrderController::class, 'success'])->name('order.success');
+Route::post('/order', [CustomerOrderController::class, 'store'])->name('order.store');
+Route::get('/order/success/{order}', [CustomerOrderController::class, 'success'])->name('order.success');
+Route::get('/invoice/{id}', [CustomerOrderController::class, 'invoice'])->name('order.invoice');
 
-    // //pdf invoice
-    // Route::get('/order/success/{order}/invoice', [CustomerOrderController::class, 'invoice'])->name('customer.order.invoice');
+
 });
 
 // Laravel Auth routes
@@ -64,5 +63,9 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
     Route::put('admin/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
 
     
+
+
+
+
 
 });

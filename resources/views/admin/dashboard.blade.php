@@ -73,6 +73,11 @@
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+    .product-list {
+        padding-left: 1rem;
+        margin-bottom: 0;
+    }
 </style>
 
 <div class="container">
@@ -98,7 +103,8 @@
                                 <th>No. Antrian</th>
                                 <th>Waktu Pesan</th>
                                 <th>Total</th>
-                                <th width="15%">Aksi</th>
+                                <th>Aksi</th>
+                                <th>Details</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -121,6 +127,23 @@
                                                 <i class="bi bi-check-circle-fill"></i> Selesaikan
                                             </button>
                                         </form>
+
+                                    </td>
+                                    <td><strong>Detail Pesanan:</strong>
+                                        <ul class="product-list">
+                                            @foreach ($order->items as $item)
+                                                <li>
+                                                    {{ $item->product->name }} —
+                                                    {{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }} =
+                                                    Rp {{ number_format($item->quantity * $item->product->price, 0, ',', '.') }}
+                                                </li>
+                                            @endforeach
+                                        </ul></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6" class="bg-light">
+                                        
+
                                     </td>
                                 </tr>
                             @empty
@@ -130,6 +153,7 @@
                             @endforelse
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>

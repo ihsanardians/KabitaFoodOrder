@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Pesan Menu') - Resto Gacoan</title>
+    <title>@yield('title', 'Pesan Menu') - Kabita Food</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -61,29 +61,29 @@
     </main>
 
 
-    <footer class="footer bg-primary text-white mt-4 py-4">
+    <footer class="footer bg-primary text-white mt-auto py-5">
         <div class="container">
             <div class="row">
-                <!-- Kolom Kiri: Deskripsi -->
-                <div class="col-lg-10 col-md-9 border-end" style="border-color: rgba(255,255,255,0.3);">
-                    <h4 class="fw-bold">Kabita Food – Harga kaki lima rasa bintang lima!</h4>
-                    <p class="text-white-50 text-justify">
+                {{-- Kolom Kiri: Diberi kelas text-center dan text-md-start --}}
+                <div class="col-lg-8 col-md-7 mb-4 mb-md-0 text-center text-md-start">
+                    <h4 class="fw-bold">Kabita Food - Harga kaki lima rasa bintang lima!</h4>
+                    <p class="text-white-50">
                         Kabita Food adalah restoran yang menyediakan berbagai macam kategori makanan mulai dari minuman, dessert dan lain lain dengan harga kaki lima namun rasanya bintang lima. Outlet kita selalu rame, jadi jangan lupa reservasi ya!
                     </p>
-                    <small>&copy; {{ date('Y') }} Pelita Surya.</small>
+                    <small>&copy; {{ date('Y') }} Kabita Food. All rights reserved.</small>
                 </div>
 
-                <!-- Kolom Kanan: Sosial Media -->
-                <div class="col-lg-2 col-md-3 ps-md-5">
+                {{-- Kolom Kanan: Diberi kelas text-center dan text-md-start --}}
+                <div class="col-lg-4 col-md-5 text-center text-md-start">
                     <h5 class="fw-bold">Sosial Media</h5>
                     <ul class="list-unstyled">
                         <li class="mb-2">
-                            <a href="https://wa.me/6281548250271?text=Halo%20saya%20ingin%20tanya%20menu%20Kabita%20Food" class="text-white text-decoration-none">
+                            <a href="#" class="text-white text-decoration-none">
                                 <i class="bi bi-whatsapp"></i> Whatsapp
                             </a>
                         </li>
                         <li class="mb-2">
-                            <a href="https://instagram.com/kabita.fnb" class="text-white text-decoration-none">
+                            <a href="#" class="text-white text-decoration-none">
                                 <i class="bi bi-instagram"></i> Instagram
                             </a>
                         </li>

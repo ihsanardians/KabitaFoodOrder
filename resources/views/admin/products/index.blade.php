@@ -97,16 +97,11 @@
                             <td>{{ ucfirst($product->category) }}</td>
                             <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
 
-                            <td>
-                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
-                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST">
-
                             <td class="text-center">
-                                <a href="#" class="btn btn-sm btn-warning btn-action me-1">
+                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning btn-action me-1">
                                     <i class="bi bi-pencil-square"></i> Edit
                                 </a>
-                                <form action="#" method="POST" class="d-inline">
-
+                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger btn-action"

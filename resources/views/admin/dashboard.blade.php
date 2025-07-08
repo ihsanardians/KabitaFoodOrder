@@ -104,7 +104,6 @@
                         <tbody>
                             @forelse ($orders as $order)
                                 <tr>
-
                                     <td class="text-center">#{{ $order->id }}</td>
                                     <td class="text-center">{{ $order->customer_name }}</td>
                                     <td class="text-center">
@@ -115,28 +114,13 @@
                                     <td class="text-center">{{ $order->created_at->format('H:i:s') }}</td>
                                     <td class="text-center">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
                                     <td class="text-center">
-                                        <form action="#" method="POST">
+                                        <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="btn btn-finish">
                                                 <i class="bi bi-check-circle-fill"></i> Selesaikan
                                             </button>
                                         </form>
-
-                                    <td>#{{ $order->id }}</td>
-                                    <td>{{ $order->customer_name }}</td>
-                                    <td><span class="badge bg-success fs-5">{{ $order->queue_number }}</span></td>
-                                    <td>{{ $order->created_at->format('H:i:s') }}</td>
-                                    <td>Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
-                                    <td>
-                                        {{-- Form untuk update status, akan kita fungsikan nanti --}}
-                                       <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
-                                        @csrf
-                                        @method('PATCH')
-                                        <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
-                                    </form>
-
-
                                     </td>
                                 </tr>
                             @empty

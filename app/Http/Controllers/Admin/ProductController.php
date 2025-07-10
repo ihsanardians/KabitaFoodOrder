@@ -120,16 +120,27 @@ class ProductController extends Controller
 
 
     public function recap(Request $request)
-{
-    $query = Order::where('status', 'selesai');
+    {
+        $query = Order::where('status', 'selesai');
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        }
+
+        $orders = $query->latest()->paginate(20);
+        $totalSales = $query->sum('total_price');
+
+        return view('admin.recap', compact('orders', 'totalSales'));
     }
 
-    $orders = $query->latest()->paginate(20);
-    $totalSales = $query->sum('total_price');
+    public function toggleAvailability($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_available = !$product->is_available;
+        $product->save();
 
-    return view('admin.recap', compact('orders', 'totalSales'));
-}
+        return redirect()->back()->with('success', 'Status produk berhasil diperbarui.');
+    }
+
+
 }

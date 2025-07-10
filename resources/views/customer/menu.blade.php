@@ -23,6 +23,14 @@
     <section id="menu-section">
         <div class="container my-5">
 
+        {{-- ✅ Tampilkan alert error jika produk habis --}}
+        @if(session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
             <div class="d-grid d-lg-none mb-4">
                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter" aria-controls="offcanvasFilter">
                     <i class="bi bi-funnel-fill"></i> Tampilkan Filter
@@ -39,7 +47,30 @@
                 <div class="col-lg-9">
                     <div class="row row-cols-1 row-cols-sm-2 row-cols-xl-3 g-4">
                         @forelse ($products as $product)
-                        <div class="col">
+                        <a href="{{ route('customer.menu.show', $product->id) }}" class="text-decoration-none text-dark">
+                            <div class="card h-100 card-product">
+                                <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300' }}"
+                                    class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title fw-bold">{{ $product->name }}</h5>
+                                    <p class="card-text text-muted small flex-grow-1">{{ Str::limit($product->description, 70) }}</p>
+                                    <div class="mt-auto">
+                                        <p class="h5 fw-bolder text-primary mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                                    </div>
+                                </div>
+                                    <div class="card-footer bg-white border-0">
+                                    <form action="{{ route('customer.cart.add', $product->id) }}" method="POST" class="d-grid">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100">
+                                            <i class="bi bi-plus-circle-fill"></i> Tambah ke Keranjang
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                            
+                        </a>
+                       
+                        {{-- <div class="col">
                             <div class="card h-100 card-product">
                                 <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300' }}" class="card-img-top" alt="{{ $product->name }}" style="height: 200px; object-fit: cover;">
                                 <div class="card-body d-flex flex-column">
@@ -56,7 +87,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         @empty
                         <div class="col-12">
                             <div class="text-center py-5 bg-light rounded">

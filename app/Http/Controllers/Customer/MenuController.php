@@ -49,4 +49,11 @@ class MenuController extends Controller
 
         return view('customer.menu', compact('products'));
     }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        return view('customer.show', compact('product'));
+    }
+
 }

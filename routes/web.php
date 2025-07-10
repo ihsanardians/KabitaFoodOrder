@@ -17,6 +17,8 @@ Route::get('/', function () {
 Route::group(['as' => 'customer.'], function () {
     // Menu
     Route::get('/menu', [CustomerMenuController::class, 'index'])->name('menu.index');
+    Route::get('/menu/{id}', [CustomerMenuController::class, 'show'])->name('menu.show');
+
 
     // Cart
     Route::get('/cart', [CustomerCartController::class, 'index'])->name('cart.index');
@@ -61,6 +63,10 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
 
     // Untuk menyimpan perubahan
     Route::put('admin/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
+
+    //soldout
+    Route::patch('/admin/products/{id}/toggle-availability', [AdminProductController::class, 'toggleAvailability'])->name('admin.products.toggleAvailability');
+
 
     
 

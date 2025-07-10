@@ -109,6 +109,16 @@
                                         <i class="bi bi-trash3"></i> Hapus
                                     </button>
                                 </form>
+                                {{-- Tombol Status: Sold Out / Ready --}}
+                                <form action="{{ route('admin.admin.products.toggleAvailability', $product->id) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <button type="submit" class="btn btn-sm {{ $product->is_available ? 'btn-outline-secondary' : 'btn-success' }} btn-action">
+                                        <i class="bi {{ $product->is_available ? 'bi-x-circle' : 'bi-check-circle' }}"></i>
+                                        {{ $product->is_available ? 'Sold Out' : 'Ready' }}
+                                    </button>
+                                </form>
+
                             </td>
                         </tr>
                     @empty

@@ -73,8 +73,10 @@
             <p class="mt-4 mb-2 text-muted-sm">Total Pembayaran:</p>
             <h4 class="fw-semibold mb-4">Rp {{ number_format($order->total_price, 0, ',', '.') }}</h4>
             <p class="mb-4">Silakan lakukan pembayaran di kasir dengan menunjukkan nomor antrian ini.</p>
-            <a href="{{ route('customer.menu.index') }}" class="btn btn-modern">Pesan Lagi</a>
-            <a href="{{ route('customer.order.invoice', $order->id) }}" class="btn btn-modern mt-2" target="_blank">Cetak Invoice</a>
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                <a href="{{ route('customer.menu.index') }}" class="btn btn-modern">Pesan Lagi</a>
+                <a href="{{ route('customer.order.invoice', $order->id) }}" class="btn btn-modern" target="_blank">Cetak Invoice</a>
+            </div>
 
         </div>
     </div>

@@ -23,19 +23,19 @@
     <section id="menu-section">
         <div class="container my-5">
 
-        {{-- ✅ Tampilkan alert error jika produk habis --}}
-        @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
             <div class="d-grid d-lg-none mb-4">
                 <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFilter" aria-controls="offcanvasFilter">
                     <i class="bi bi-funnel-fill"></i> Tampilkan Filter
                 </button>
             </div>
+
+            {{-- ✅ Tampilkan alert error jika produk habis
+            @if(session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i> {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif --}}
 
             <div class="row">
                 <div class="col-lg-3 d-none d-lg-block">
@@ -55,8 +55,14 @@
                                     <h5 class="card-title fw-bold">{{ $product->name }}</h5>
                                     <p class="card-text text-muted small flex-grow-1">{{ Str::limit($product->description, 70) }}</p>
                                     <div class="mt-auto">
-                                        <p class="h5 fw-bolder text-primary mb-3">Rp {{ number_format($product->price, 0, ',', '.') }}</p>
+                                        <p class="h5 fw-bolder mb-3 text-black">
+                                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                                            @if ($product->is_available == 0)
+                                                <span class="badge bg-danger ms-2">Habis</span>
+                                            @endif
+                                        </p>
                                     </div>
+
                                 </div>
                                     <div class="card-footer bg-white border-0">
                                     <form action="{{ route('customer.cart.add', $product->id) }}" method="POST" class="d-grid">

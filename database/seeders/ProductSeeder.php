@@ -35,14 +35,14 @@ class ProductSeeder extends Seeder
             'category' => 'Main Course',
             'price' => 18000,
             'description' => '2 Pack Grill(Beef Slice Barbeque/Lada Hitam, Beef Enoki, Chicken slice Barbeque/Lada Hitam, Sosis) & 2 Pack Shabu (Sayur, Chikua, Fish Tofu, Crab Stick)',
-            'image' => 'products/paket-pacar.jpg'
+            'image' => 'products/paket-pacar.png'
         ]);
         Product::create([
             'name' => 'Paket Sahabat (4 Orang)',
             'category' => 'Main Course',
             'price' => 18000,
             'description' => '4 Pack Grill(Beef Slice Barbeque/Lada Hitam, Beef Enoki, Chicken slice Barbeque/Lada Hitam, Sosis) & 4 Pack Shabu (Sayur, Chikua, Fish Tofu, Crab Stick)',
-            'image' => 'products/paket-sahabat.jpg'
+            'image' => 'products/paket-sahabat.png'
         ]);
 
         // Data Add On
@@ -160,7 +160,7 @@ class ProductSeeder extends Seeder
         Product::create([
             'name' => 'Mango Sticky Rice',
             'category' => 'Dessert',
-            'price' => 1200,
+            'price' => 12000,
             'description' => 'Ketan pulen dengan santan gurih dan mangga segar — sajian manis khas Thailand yang menggoda selera.',
             'image' => 'products/mango-sticky-rice.jpg'
         ]);

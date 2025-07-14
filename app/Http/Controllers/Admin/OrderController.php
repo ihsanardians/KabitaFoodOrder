@@ -16,7 +16,22 @@ class OrderController extends Controller
         // 1. Validasi input dari form
         $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:15',
+            'customer_phone' => [
+                'required',
+                'string',
+                'min:10',
+                'max:15',
+                // Gunakan regex yang lebih sederhana dan tepat ini
+                'regex:/^08[0-9]{8,13}$/' 
+            ],
+        ], 
+        [
+            // Pesan Custom
+            'customer_name.required' => 'Nama wajib diisi.',
+            'customer_phone.required' => 'Nomor HP wajib diisi.',
+            'customer_phone.min' => 'Nomor HP minimal harus 10 digit.',
+            'customer_phone.max' => 'Nomor HP maksimal harus 15 digit.',
+            'customer_phone.regex' => 'Format Nomor HP tidak valid (contoh: 08123456789).'
         ]);
 
         $cart = session()->get('cart', []);

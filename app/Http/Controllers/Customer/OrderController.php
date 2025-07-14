@@ -14,37 +14,28 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class OrderController extends Controller
-{
-    // private function sendWhatsApp($name, $phone, $order)
-    // {
-    //     $token = '63jffwm6PJvZbuHfEazAmi5ZvBDnhiNOu2nFl1kYQT8m3vp7zOF0CkK'; // ganti dengan token dari akun Wablas Anda
-    //     $url = 'https://sby.wablas.com/api/send-message'; // Endpoint API Wablas
-
-    //     // Format nomor HP: ubah awalan 0 jadi 62
-    //     $phone = preg_replace('/^0/', '62', $phone);
-
-    //     $message = "Halo *$name*,\n"
-    //             . "Terima kasih atas pesanan Anda di *FoodCourt Kami*.\n\n"
-    //             . "🧾 *Nomor Antrian:* {$order->queue_number}\n"
-    //             . "💰 *Total:* Rp " . number_format($order->total_price, 0, ',', '.') . "\n\n"
-    //             . "Silakan tunggu pesanan Anda diproses. 🙏";
-
-    //     Http::withHeaders([
-    //         'Authorization' => $token,
-    //     ])->post($url, [
-    //         'phone' => $phone,
-    //         'message' => $message,
-    //         'secret' => false,
-    //         'priority' => true,
-    //     ]);
-    // }
-    
+{ 
     public function store(Request $request)
     {
         // 1. Validasi input dari form
         $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:15', // Validasi nomor HP
+            'customer_phone' => [
+                'required',
+                'string',
+                'min:10',
+                'max:15',
+                // Gunakan regex yang lebih sederhana dan tepat ini
+                'regex:/^08[0-9]{8,13}$/' 
+            ],
+        ], 
+        [
+            // Pesan Custom
+            'customer_name.required' => 'Nama wajib diisi.',
+            'customer_phone.required' => 'Nomor HP wajib diisi.',
+            'customer_phone.min' => 'Nomor HP minimal harus 10 digit.',
+            'customer_phone.max' => 'Nomor HP maksimal harus 15 digit.',
+            'customer_phone.regex' => 'Format Nomor HP tidak valid (contoh: 08123456789).'
         ]);
 
         $cart = session()->get('cart', []);

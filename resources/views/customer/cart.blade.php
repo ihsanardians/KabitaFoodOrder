@@ -24,11 +24,12 @@
     }
 
 </style>
+<div class="container my-5">
 <div class="card shadow">
     <div class="card-header bg-primary text-white">
         <h3 class="mb-0"><i class="bi bi-cart-fill"></i> &nbsp; Keranjang Anda</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body mb-10">
         @if(!empty($cart))
             <table class="table table-hover">
                 <thead>
@@ -70,18 +71,35 @@
             <hr>
             {{-- Ganti form lama dengan ini --}}
     <div class="mt-5">
-    <div class="card shadow-lg border-0 rounded-4 p-4 bg-white" style="animation: fadeIn 0.5s ease-in-out;">
+    
         <h4 class="fw-bold mb-4 text-primary-emphasis"><i class="bi bi-person-vcard"></i> Lengkapi Data Pemesan</h4>
+
+        {{-- ============================================= --}}
+        {{-- BAGIAN UNTUK MENAMPILKAN PESAN ERROR VALIDASI --}}
+        {{-- ============================================= --}}
+        @if ($errors->any())
+            <div class="alert alert-danger" role="alert">
+                <h6 class="alert-heading">Terdapat Kesalahan!</h6>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <form action="{{ route('customer.order.store') }}" method="POST">
             @csrf
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="customer_name" class="form-label">Nama Anda</label>
-                    <input type="text" name="customer_name" id="customer_name" class="form-control form-control-lg rounded-pill" placeholder="Masukkan nama Anda" required>
+                    {{-- Tambahkan 'is-invalid' jika ada error & 'old()' untuk data lama --}}
+                    <input type="text" name="customer_name" id="customer_name" class="form-control form-control-lg rounded-pill @error('customer_name') is-invalid @enderror" placeholder="Masukkan nama Anda" value="{{ old('customer_name') }}" required>
                 </div>
                 <div class="col-md-6 mb-3">
                     <label for="customer_phone" class="form-label">Nomor HP</label>
-                    <input type="tel" name="customer_phone" id="customer_phone" class="form-control form-control-lg rounded-pill" placeholder="Contoh: 08123456789" required>
+                    {{-- Tambahkan 'is-invalid' jika ada error & 'old()' untuk data lama --}}
+                    <input type="tel" name="customer_phone" id="customer_phone" class="form-control form-control-lg rounded-pill @error('customer_phone') is-invalid @enderror" placeholder="Contoh: 08123456789" value="{{ old('customer_phone') }}" required>
                 </div>
             </div>
             <div class="d-grid mt-4">
@@ -90,7 +108,7 @@
                 </button>
             </div>
         </form>
-    </div>
+    
     </div>
         @else
             <div class="text-center py-5">

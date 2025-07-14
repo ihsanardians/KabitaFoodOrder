@@ -37,9 +37,11 @@
 
     .btn-action {
         font-weight: 500;
-        padding: 6px 12px;
-        border-radius: 8px;
-        font-size: 0.9rem;
+        padding: 6px 10px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        transition: 0.2s ease-in-out;
+        white-space: nowrap;
     }
 
     .btn-warning {
@@ -48,18 +50,40 @@
         color: #212529;
     }
 
+    .btn-warning:hover {
+        background-color: #e0a800;
+    }
+
     .btn-danger {
         background-color: #dc3545;
         border: none;
         color: #fff;
     }
 
-    .btn-warning:hover {
-        background-color: #e0a800;
-    }
-
     .btn-danger:hover {
         background-color: #bb2d3b;
+    }
+
+    /* Tombol Sold Out (abu-abu) */
+    .btn-soldout {
+        background-color: #6c757d !important;
+        color: #fff !important;
+        border: none;
+    }
+
+    .btn-soldout:hover {
+        background-color: #5a6268 !important;
+    }
+
+    /* Tombol Ready (hijau) */
+    .btn-ready {
+        background-color: #198754 !important;
+        color: #fff !important;
+        border: none;
+    }
+
+    .btn-ready:hover {
+        background-color: #157347 !important;
     }
 </style>
 
@@ -90,40 +114,62 @@
                 <tbody>
                     @forelse ($products as $product)
                         <tr>
+                            <!-- Gambar Produk -->
                             <td>
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="product-img">
+                                <img src="{{ asset('storage/' . $product->image) }}" 
+                                     alt="{{ $product->name }}" 
+                                     class="product-img">
                             </td>
-                            <td>{{ $product->name }}</td>
+
+                            <!-- Nama Produk -->
+                            <td><strong>{{ $product->name }}</strong></td>
+
+                            <!-- Kategori -->
                             <td>{{ ucfirst($product->category) }}</td>
+
+                            <!-- Harga -->
                             <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
 
-                            <td class="text-center">
-                                <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-warning btn-action me-1">
-                                    <i class="bi bi-pencil-square"></i> Edit
-                                </a>
-                                <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger btn-action"
-                                            onclick="return confirm('Anda yakin ingin menghapus produk ini?')">
-                                        <i class="bi bi-trash3"></i> Hapus
-                                    </button>
-                                </form>
-                                {{-- Tombol Status: Sold Out / Ready --}}
-                                <form action="{{ route('admin.admin.products.toggleAvailability', $product->id) }}" method="POST">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-sm {{ $product->is_available ? 'btn-outline-secondary' : 'btn-success' }} btn-action">
-                                        <i class="bi {{ $product->is_available ? 'bi-x-circle' : 'bi-check-circle' }}"></i>
-                                        {{ $product->is_available ? 'Sold Out' : 'Ready' }}
-                                    </button>
-                                </form>
+                            <!-- Aksi -->
+                            <td class="align-middle">
+                                <div class="d-flex flex-column align-items-stretch gap-2">
+                                    <!-- Baris atas: Edit & Hapus -->
+                                    <div class="d-flex justify-content-between gap-2">
+                                        <!-- Edit -->
+                                        <a href="{{ route('admin.products.edit', $product->id) }}" 
+                                           class="btn btn-sm btn-warning btn-action w-100 text-center">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
 
+                                        <!-- Hapus -->
+                                        <form action="{{ route('admin.products.destroy', $product->id) }}" 
+                                              method="POST" 
+                                              onsubmit="return confirm('Anda yakin ingin menghapus produk ini?')" 
+                                              class="w-100">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-danger btn-action w-100 text-center">
+                                                <i class="bi bi-trash3"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <!-- Baris bawah: Status -->
+                                    <form action="{{ route('admin.admin.products.toggleAvailability', $product->id) }}" 
+                                          method="POST" class="w-100">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-sm btn-action w-100 text-center {{ $product->is_available ? 'btn-soldout' : 'btn-ready' }}">
+                                            <i class="bi {{ $product->is_available ? 'bi-x-circle' : 'bi-check-circle' }}"></i>
+                                            {{ $product->is_available ? 'Sold Out' : 'Ready' }}
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted">Belum ada data produk.</td>
+                            <td colspan="5" class="text-center text-muted py-4">Belum ada data produk.</td>
                         </tr>
                     @endforelse
                 </tbody>

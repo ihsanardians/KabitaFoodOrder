@@ -5,49 +5,40 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash; // Penting untuk enkripsi password
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password; 
 
 class UserController extends Controller
 {
-    // Menampilkan daftar semua user
     public function index()
     {
         $users = User::all();
         return view('admin.users.index', compact('users'));
     }
 
-    // Menampilkan form untuk membuat user baru
     public function create()
     {
         return view('admin.users.create');
     }
 
-    // Menyimpan user baru ke database
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z\s]+$/'],
+            'email' => ['required', 'string', 'email:rfc,dns', 'max:255', 'unique:users'],
             'password' => [
                 'required',
-                'confirmed', // Pastikan ada field 'password_confirmation' di form Anda
-                Password::min(8)  // Minimal 8 karakter
-                        ->letters() // Wajib ada setidaknya satu huruf
-                        ->mixedCase() // Wajib ada huruf besar dan kecil
-                        ->numbers() // Wajib ada setidaknya satu angka
-                        ->symbols() // Wajib ada setidaknya satu simbol (cth: @, $, !, %)
-                        ->uncompromised(), // Wajib password yang belum pernah bocor di internet
+                'confirmed',
+                Password::min(8)->letters()->mixedCase()->numbers()->symbols()->uncompromised(),
             ],
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password), // Password di-hash (enkripsi)
+            'password' => Hash::make($request->password),
         ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User kasir baru berhasil dibuat.');
     }
-
-    // Method lain (show, edit, update, destroy) bisa kita lengkapi nanti
 }

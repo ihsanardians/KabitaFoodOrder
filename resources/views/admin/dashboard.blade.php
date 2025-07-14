@@ -119,6 +119,17 @@
                                     </td>
                                     <td class="text-center">{{ $order->created_at->format('H:i:s') }}</td>
                                     <td class="text-center">Rp {{ number_format($order->total_price, 0, ',', '.') }}</td>
+                                    <td>
+                                        <ul class="product-list" style="list-style: none; padding-left: 0; margin: 0;">
+                                            @foreach ($order->items as $index => $item)
+                                                <li style="margin-bottom: 12px; padding: 8px; border-bottom: 1px solid #eee;">
+                                                    <div style="font-weight: bold;">{{ $index + 1 }}. {{ $item->product->name }}</div>
+                                                    <div>{{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }}</div>
+                                                    <div><strong>Total: Rp {{ number_format($item->quantity * $item->product->price, 0, ',', '.') }}</strong></div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
                                     <td class="text-center">
                                         <form action="{{ route('admin.orders.updateStatus', $order->id) }}" method="POST">
                                             @csrf
@@ -127,24 +138,10 @@
                                                 <i class="bi bi-check-circle-fill"></i> Selesaikan
                                             </button>
                                         </form>
-
                                     </td>
-                                    <td><strong>Detail Pesanan:</strong>
-                                        <ul class="product-list">
-                                            @foreach ($order->items as $item)
-                                                <li>
-                                                    {{ $item->product->name }} —
-                                                    {{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }} =
-                                                    Rp {{ number_format($item->quantity * $item->product->price, 0, ',', '.') }}
-                                                </li>
-                                            @endforeach
-                                        </ul></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="6" class="bg-light">
-                                        
-
-                                    </td>
+                                    <td colspan="6" class="bg-light"></td>
                                 </tr>
                             @empty
                                 <tr>

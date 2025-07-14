@@ -25,6 +25,14 @@
         font-size: 1rem;
     }
 
+    .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .text-danger {
+        font-size: 0.875rem;
+    }
+
     .btn-primary,
     .btn-secondary {
         font-weight: 600;
@@ -36,6 +44,7 @@
     .btn-primary {
         background: linear-gradient(135deg, #0d6efd, #3b8dff);
         border: none;
+        color: #fff;
     }
 
     .btn-primary:hover {
@@ -47,10 +56,6 @@
         background-color: #6c757d;
         color: #fff;
     }
-
-    .alert-danger {
-        border-radius: 12px;
-    }
 </style>
 
 <div class="container-fluid">
@@ -58,36 +63,47 @@
 
     <div class="card form-card">
         <div class="card-body">
-            @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-
             <form action="{{ route('admin.users.store') }}" method="POST">
                 @csrf
+
                 <div class="mb-3">
                     <label for="name" class="form-label">Nama Lengkap</label>
-                    <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+                    <input type="text" name="name" id="name"
+                        class="form-control @error('name') is-invalid @enderror"
+                        value="{{ old('name') }}" required>
+                    @error('name')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="email" class="form-label">Alamat Email</label>
-                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
+                    <input type="email" name="email" id="email"
+                        class="form-control @error('email') is-invalid @enderror"
+                        value="{{ old('email') }}" required>
+                    @error('email')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
-                    <input type="password" name="password" id="password" class="form-control" required>
+                    <input type="password" name="password" id="password"
+                        class="form-control @error('password') is-invalid @enderror"
+                        required>
+                    @error('password')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3">
                     <label for="password_confirmation" class="form-label">Konfirmasi Password</label>
-                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" required>
+                    <input type="password" name="password_confirmation" id="password_confirmation"
+                        class="form-control @error('password_confirmation') is-invalid @enderror"
+                        required>
+                    @error('password_confirmation')
+                        <div class="text-danger mt-1">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="d-flex gap-2 mt-4">

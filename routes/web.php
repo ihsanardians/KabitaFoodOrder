@@ -17,6 +17,8 @@ Route::get('/', function () {
 Route::group(['as' => 'customer.'], function () {
     // Menu
     Route::get('/menu', [CustomerMenuController::class, 'index'])->name('menu.index');
+    Route::get('/menu/{id}', [CustomerMenuController::class, 'show'])->name('menu.show');
+
 
     // Cart
     Route::get('/cart', [CustomerCartController::class, 'index'])->name('cart.index');
@@ -25,9 +27,11 @@ Route::group(['as' => 'customer.'], function () {
     Route::get('/cart/remove/{product}', [CustomerCartController::class, 'remove'])->name('cart.remove');
 
     // Order
-    Route::post('/order', [CustomerOrderController::class, 'store'])->name('order.store');
-    // BARIS INI SUDAH DIPERBAIKI (tidak ada titik tambahan)
-    Route::get('/order/success/{order}', [CustomerOrderController::class, 'success'])->name('order.success');
+Route::post('/order', [CustomerOrderController::class, 'store'])->name('order.store');
+Route::get('/order/success/{order}', [CustomerOrderController::class, 'success'])->name('order.success');
+Route::get('/invoice/{id}', [CustomerOrderController::class, 'invoice'])->name('order.invoice');
+
+
 });
 
 // Laravel Auth routes
@@ -46,4 +50,25 @@ Route::middleware('auth')->prefix('admin')->as('admin.')->group(function () {
 
     // Rekap Penjualan
     Route::get('sales-recap', [AdminOrderController::class, 'recap'])->name('sales.recap');
+
+    //delete
+    Route::delete('admin/products/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+
+    //edit menu
+    // Untuk menampilkan form edit
+    Route::get('admin/products/{id}/edit', [AdminProductController::class, 'edit'])->name('admin.products.edit');
+
+    // Untuk menyimpan perubahan
+    Route::put('admin/products/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
+
+    //soldout
+    Route::patch('/admin/products/{id}/toggle-availability', [AdminProductController::class, 'toggleAvailability'])->name('admin.products.toggleAvailability');
+
+
+    
+
+
+
+
+
 });

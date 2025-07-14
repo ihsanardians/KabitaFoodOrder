@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Customer;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,7 +16,22 @@ class OrderController extends Controller
         // 1. Validasi input dari form
         $request->validate([
             'customer_name' => 'required|string|max:255',
-            'customer_phone' => 'required|string|max:15',
+            'customer_phone' => [
+                'required',
+                'string',
+                'min:10',
+                'max:15',
+                // Gunakan regex yang lebih sederhana dan tepat ini
+                'regex:/^08[0-9]{8,13}$/' 
+            ],
+        ], 
+        [
+            // Pesan Custom
+            'customer_name.required' => 'Nama wajib diisi.',
+            'customer_phone.required' => 'Nomor HP wajib diisi.',
+            'customer_phone.min' => 'Nomor HP minimal harus 10 digit.',
+            'customer_phone.max' => 'Nomor HP maksimal harus 15 digit.',
+            'customer_phone.regex' => 'Format Nomor HP tidak valid (contoh: 08123456789).'
         ]);
 
         $cart = session()->get('cart', []);
@@ -69,4 +84,57 @@ class OrderController extends Controller
     {
         return view('customer.success', compact('order'));
     }
+
+    //recap transaksi
+   public function recap(Request $request)
+    {
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
+
+        $query = \App\Models\Order::query();
+
+        if ($startDate && $endDate) {
+            $query->whereBetween('created_at', [
+                Carbon::parse($startDate)->startOfDay(),
+                Carbon::parse($endDate)->endOfDay()
+            ]);
+        }
+
+        $totalOrders = $query->count();
+        $totalIncome = $query->sum('total_price');
+
+        $salesByDate = Order::selectRaw('DATE(created_at) as date, SUM(total_price) as total')
+            ->groupBy('date')
+            ->orderBy('date', 'desc') 
+            ->get();
+
+        $allOrders = $query->orderBy('created_at', 'asc')->get();
+
+        return view('admin.recap', compact(
+            'totalOrders', 'totalIncome', 'salesByDate', 'allOrders'
+        ));
+    }
+
+    //selesaikan pesanan
+    public function updateStatus(Order $order)
+    {
+        // Update status pesanan menjadi 'selesai'
+        $order->update([
+            'status' => 'selesai'
+        ]);
+
+        // Format nomor WhatsApp (ubah 08xxx menjadi 628xxx)
+        $phone = preg_replace('/^0/', '62', $order->customer_phone);
+
+        // Pesan yang dikirim ke WhatsApp
+        $message = "Halo {$order->customer_name}, pesanan Anda dengan nomor antrian {$order->queue_number} telah selesai. \n\nSilahkan Ambil Pesanan Kamu di Kasir \n\nSilahkan menikmati hidangan kami 🙏😊";
+
+        // Arahkan ke WhatsApp Web
+        return redirect()->away("https://wa.me/{$phone}?text=" . urlencode($message));
+    }
+
+
+    //wa selesai pesanan
+    
+
 }

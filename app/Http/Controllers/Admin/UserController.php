@@ -28,7 +28,16 @@ class UserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => [
+                'required',
+                'confirmed', // Pastikan ada field 'password_confirmation' di form Anda
+                Password::min(8)  // Minimal 8 karakter
+                        ->letters() // Wajib ada setidaknya satu huruf
+                        ->mixedCase() // Wajib ada huruf besar dan kecil
+                        ->numbers() // Wajib ada setidaknya satu angka
+                        ->symbols() // Wajib ada setidaknya satu simbol (cth: @, $, !, %)
+                        ->uncompromised(), // Wajib password yang belum pernah bocor di internet
+            ],
         ]);
 
         User::create([

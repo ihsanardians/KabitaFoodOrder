@@ -20,30 +20,25 @@
 </head>
 <body>
 
-    <header class="header-main">
+    <header class="bg-white shadow-sm sticky-top py-3 mb-4" style="border-bottom: 4px solid #0d6efd;">
         <div class="container d-flex justify-content-between align-items-center">
-            <!-- Kiri: Judul -->
-            <a href="/" class="d-flex align-items-center mb-3 mb-lg-0 me-lg-auto text-dark text-decoration-none">
-            <img src="{{ asset('images/logo/logo-kabita.png') }}"
-                alt="Logo Kabita"
-                class="me-3"
-                style="height: 48px; width: auto;">
-            <span class="fs-3 fw-bold">Kabita Food</span>
-            </a>
             
+            <a href="{{ route('customer.menu.index') }}" class="text-decoration-none text-dark d-flex align-items-center">
+                <img src="{{ asset('images/logo/logo-kabita.png') }}" alt="Logo Kabita" style="height: 40px;" class="me-2">
+                <span class="fs-4 fw-bold">Kabita Food</span>
+            </a>
 
-        <!-- Kanan: Tombol Keranjang -->
-        <button class="btn btn-primary text-white fw-500 px-4 position-relative"
-            onclick="location.href='{{ route('customer.cart.index') }}'" type="button">
-            <i class="bi bi-cart-fill"></i> &nbsp; Keranjang
-            @if(session('cart') && count(session('cart')) > 0)
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{ count(session('cart')) }}
-                </span>
-            @endif
-        </button>
-
-
+            <a href="{{ route('customer.menu.index') }}" class="btn btn-primary position-relative">
+                <i class="bi bi-list"></i>
+                <span class="ms-1">Menu</span>
+                
+                <!-- @if(session('cart') && count(session('cart')) > 0)
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ count(session('cart')) }}
+                        <span class="visually-hidden">items in cart</span>
+                    </span>
+                @endif -->
+            </a>
         </div>
     </header>
 

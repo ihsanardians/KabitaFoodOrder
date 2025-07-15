@@ -19,29 +19,49 @@ class CartController extends Controller
     }
 
     public function add(Request $request, Product $product)
-{
-    // ❗ Cek ketersediaan produk
-    if (!$product->is_available) {
-        return redirect()->back()->with('error', 'Produk ini sedang tidak tersedia atau sudah habis.');
+    {
+        
+        // ❗ Cek ketersediaan produk
+        if (isset($product->is_available) && !$product->is_available) {
+            // Jika AJAX, kirim pesan error dalam format JSON
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Maaf, produk ini sedang habis.'
+                ], 422); // 422 Unprocessable Entity
+            }
+            // Jika bukan AJAX, lakukan redirect dengan pesan error
+            return redirect()->back()->with('error', 'Produk ini sedang tidak tersedia atau sudah habis.');
+        }
+
+        // Ambil cart dari session
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$product->id])) {
+            $cart[$product->id]['quantity']++;
+        } else {
+            $cart[$product->id] = [
+                "name" => $product->name,
+                "quantity" => 1,
+                "price" => $product->price,
+                "image" => $product->image
+            ];
+        }
+
+        session()->put('cart', $cart);
+
+        // ✅ Pengecekan AJAX harus di sini, SEBELUM redirect
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success'    => true,
+                'message'    => 'Produk berhasil ditambahkan!',
+                'cart_count' => count((array) session('cart'))
+            ]);
+        }
+
+        // Redirect hanya untuk non-AJAX
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
-
-    // Ambil cart dari session
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$product->id])) {
-        $cart[$product->id]['quantity']++;
-    } else {
-        $cart[$product->id] = [
-            "name" => $product->name,
-            "quantity" => 1,
-            "price" => $product->price,
-            "image" => $product->image
-        ];
-    }
-
-    session()->put('cart', $cart);
-    return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
-}
 
 
     public function update(Request $request, Product $product)

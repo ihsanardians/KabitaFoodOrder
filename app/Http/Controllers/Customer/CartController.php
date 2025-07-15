@@ -19,29 +19,30 @@ class CartController extends Controller
     }
 
     public function add(Request $request, Product $product)
-{
-    // ❗ Cek ketersediaan produk
-    if (!$product->is_available) {
-        return redirect()->back()->with('error', 'Produk ini sedang tidak tersedia atau sudah habis.');
+    {
+        
+        // ❗ Cek ketersediaan produk
+        if (!$product->is_available) {
+            return redirect()->back()->with('error', 'Produk ini sedang tidak tersedia atau sudah habis.');
+        }
+
+        // Ambil cart dari session
+        $cart = session()->get('cart', []);
+
+        if (isset($cart[$product->id])) {
+            $cart[$product->id]['quantity']++;
+        } else {
+            $cart[$product->id] = [
+                "name" => $product->name,
+                "quantity" => 1,
+                "price" => $product->price,
+                "image" => $product->image
+            ];
+        }
+
+        session()->put('cart', $cart);
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
-
-    // Ambil cart dari session
-    $cart = session()->get('cart', []);
-
-    if (isset($cart[$product->id])) {
-        $cart[$product->id]['quantity']++;
-    } else {
-        $cart[$product->id] = [
-            "name" => $product->name,
-            "quantity" => 1,
-            "price" => $product->price,
-            "image" => $product->image
-        ];
-    }
-
-    session()->put('cart', $cart);
-    return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
-}
 
 
     public function update(Request $request, Product $product)

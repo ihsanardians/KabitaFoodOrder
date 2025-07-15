@@ -33,7 +33,7 @@
         <div class="row">
             {{-- Filter Sidebar (Hanya Desktop) --}}
             <div class="col-lg-3 d-none d-lg-block">
-                <div class="sticky-top" style="top: 20px;">
+                <div class="sticky-top" style="top: 90px;">
                     @include('customer.partials._filter-sidebar')
                 </div>
             </div>
@@ -44,33 +44,35 @@
                 <div class="row row-cols-2 row-cols-lg-3 g-4">
                     @forelse ($products as $product)
                     <div class="col">
-                        <div class="card h-100 card-product">
-                            <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300' }}"
-                                 class="card-img-top" alt="{{ $product->name }}" style="height: 150px; object-fit: cover;">
-                            <div class="card-body d-flex flex-column p-3">
-                                <h6 class="card-title fw-bold mb-1">{{ $product->name }}</h6>
-                                <p class="card-text text-muted small flex-grow-1">{{ Str::limit($product->description, 50) }}</p>
-                                <div class="mt-auto">
-                                    <p class="h6 fw-bolder mb-2">
-                                        Rp {{ number_format($product->price, 0, ',', '.') }}
-                                        
-                                        {{-- Logika untuk menampilkan badge "Habis" --}}
-                                        @if (isset($product->is_available) && $product->is_available == 0)
-                                            <span class="badge bg-danger ms-2">Habis</span>
-                                        @endif
-                                    </p>
+                        <a href="{{ route('customer.menu.show', $product->id) }}" class="text-decoration-none text-dark">
+                            <div class="card h-100 card-product">
+                                <img src="{{ $product->image ? asset('storage/' . $product->image) : 'https://via.placeholder.com/300' }}"
+                                    class="card-img-top" alt="{{ $product->name }}" style="height: 150px; object-fit: cover;">
+                                <div class="card-body d-flex flex-column p-3">
+                                    <h6 class="card-title fw-bold mb-1">{{ $product->name }}</h6>
+                                    <p class="card-text text-muted small flex-grow-1">{{ Str::limit($product->description, 50) }}</p>
+                                    <div class="mt-auto">
+                                        <p class="h6 fw-bolder mb-2">
+                                            Rp {{ number_format($product->price, 0, ',', '.') }}
+                                            
+                                            {{-- Logika untuk menampilkan badge "Habis" --}}
+                                            @if (isset($product->is_available) && $product->is_available == 0)
+                                                <span class="badge bg-danger ms-2">Habis</span>
+                                            @endif
+                                        </p>
+                                    </div>
+                                </div>
+                                {{-- Card-footer untuk tombol, dipisah dari card-body --}}
+                                <div class="card-footer bg-white border-0 p-3 pt-0">
+                                    <form action="{{ route('customer.cart.add', $product->id) }}" method="POST" class="d-grid">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="bi bi-plus-circle-fill"></i> Tambah
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
-                            {{-- Card-footer untuk tombol, dipisah dari card-body --}}
-                            <div class="card-footer bg-white border-0 p-3 pt-0">
-                                <form action="{{ route('customer.cart.add', $product->id) }}" method="POST" class="d-grid">
-                                    @csrf
-                                    <button type="submit" class="btn btn-primary btn-sm">
-                                        <i class="bi bi-plus-circle-fill"></i> Tambah
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+                        </a>
                     </div>
                     @empty
                     <div class="col-12">

@@ -22,15 +22,7 @@ class CartController extends Controller
     {
         
         // ❗ Cek ketersediaan produk
-        if (isset($product->is_available) && !$product->is_available) {
-            // Jika AJAX, kirim pesan error dalam format JSON
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Maaf, produk ini sedang habis.'
-                ], 422); // 422 Unprocessable Entity
-            }
-            // Jika bukan AJAX, lakukan redirect dengan pesan error
+        if (!$product->is_available) {
             return redirect()->back()->with('error', 'Produk ini sedang tidak tersedia atau sudah habis.');
         }
 
@@ -49,17 +41,6 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
-
-        // ✅ Pengecekan AJAX harus di sini, SEBELUM redirect
-        if ($request->wantsJson()) {
-            return response()->json([
-                'success'    => true,
-                'message'    => 'Produk berhasil ditambahkan!',
-                'cart_count' => count((array) session('cart'))
-            ]);
-        }
-
-        // Redirect hanya untuk non-AJAX
         return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
     }
 

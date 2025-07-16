@@ -33,7 +33,7 @@ class ProductController extends Controller
         // 1. Validasi data
         $request->validate([
             'name' => 'required|string|max:255',
-            'category' => 'required|in:makanan,minuman,snack',
+            'category' => 'required|in:Dessert,Main Course,Add On',
             'price' => 'required|numeric|min:0',
             'description' => 'nullable|string',
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048' // max 2MB
@@ -67,38 +67,80 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        return view('admin.products.edit', compact('product'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $product = Product::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        // Simpan gambar baru jika diunggah
+        if ($request->hasFile('image')) {
+            // Hapus gambar lama jika ada
+            if ($product->image && file_exists(public_path('storage/' . $product->image))) {
+                unlink(public_path('storage/' . $product->image));
+            }
+
+            // Upload gambar baru
+            $imagePath = $request->file('image')->store('products', 'public');
+            $product->image = $imagePath;
+        }
+
+        // Update data lainnya
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->description = $request->description;
+        $product->save();
+
+        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil diperbarui.');
     }
+
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $product = Product::findOrFail($id);
+        $product->delete();
+
+        return redirect()->route('admin.products.index')->with('success', 'Produk berhasil dihapus.');
     }
+
 
     public function recap(Request $request)
-{
-    $query = Order::where('status', 'selesai');
+    {
+        $query = Order::where('status', 'selesai');
 
-    if ($request->filled('start_date') && $request->filled('end_date')) {
-        $query->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('created_at', [$request->start_date, $request->end_date . ' 23:59:59']);
+        }
+
+        $orders = $query->latest()->paginate(20);
+        $totalSales = $query->sum('total_price');
+
+        return view('admin.recap', compact('orders', 'totalSales'));
     }
 
-    $orders = $query->latest()->paginate(20);
-    $totalSales = $query->sum('total_price');
+    public function toggleAvailability($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->is_available = !$product->is_available;
+        $product->save();
 
-    return view('admin.recap', compact('orders', 'totalSales'));
-}
+        return redirect()->back()->with('success', 'Status produk berhasil diperbarui.');
+    }
+
+
 }

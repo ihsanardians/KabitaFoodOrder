@@ -11,14 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
-
-        body {
-            background-color: #f4f7f6;
-            margin: 0;
-        }
+        * { font-family: 'Inter', sans-serif; }
+        body { background-color: #f4f7f6; margin: 0; }
 
         .sidebar {
             background: linear-gradient(180deg, #0d6efd, #3b8dff);
@@ -30,102 +24,113 @@
             width: 250px;
             color: #fff;
             box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1030;
         }
-
         .sidebar-header {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 30px;
-            text-align: center;
-            letter-spacing: 1px;
+            font-size: 1.6rem; font-weight: 700; margin-bottom: 30px; text-align: center; letter-spacing: 1px;
         }
-
         .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.9);
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9); padding: 12px 16px; border-radius: 12px; margin-bottom: 10px; transition: all 0.3s ease; font-weight: 500;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15); color: #ffffff;
+        }
+        .sidebar .nav-link .bi { margin-right: 12px; font-size: 1.2rem; }
+        .sidebar-close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
         }
 
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-        }
-
-        .sidebar .nav-link .bi {
-            margin-right: 12px;
-            font-size: 1.2rem;
-        }
-
-        .main-content {
-            margin-left: 250px;
-            padding: 30px 40px;
-            min-height: 100vh;
-        }
-
+        .main-content { padding: 20px; min-height: 100vh; }
         .top-nav {
-            background-color: #ffffff;
-            padding: 12px 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            background-color: #ffffff; padding: 12px 20px; border-radius: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
         }
-
-        .nav-link.dropdown-toggle {
-            font-weight: 600;
+        .sidebar-toggle {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
             color: #0d6efd;
         }
+        .nav-link.dropdown-toggle { font-weight: 600; color: #0d6efd; }
+        .dropdown-menu a { font-weight: 500; }
 
-        .dropdown-menu a {
-            font-weight: 500;
+        /* Aturan untuk layar kecil (di bawah 992px) */
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .sidebar-toggle {
+                display: block;
+            }
+            .top-nav {
+                 margin-bottom: 20px;
+            }
+        }
+
+        /* Aturan untuk layar besar (992px ke atas) */
+        @media (min-width: 992px) {
+            .main-content {
+                margin-left: 250px;
+                padding: 30px 40px;
+            }
+            .sidebar-close-button {
+                display: none; /* Sembunyikan tombol close di desktop */
+            }
         }
     </style>
 </head>
 <body>
     <div id="app">
-        <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Logo & Title -->
-        <div class="d-flex flex-column align-items-center mb-4">
-            <img src="{{ asset('images/logo/logo-kabita.png') }}" alt="Logo Kabita" style="height: 70px; width: auto;" class="mb-2">
-            <div class="text-white fw-bold fs-4 text-center">Kasir Area</div>
+        <div class="sidebar" id="sidebar">
+            <button class="sidebar-close-button" id="sidebar-close-button">&times;</button>
+            <div class="d-flex flex-column align-items-center mb-4">
+                <img src="{{ asset('images/logo/logo-kabita.png') }}" alt="Logo Kabita" style="height: 70px; width: auto;" class="mb-2">
+                <div class="text-white fw-bold fs-4 text-center">Kasir Area</div>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
+                        <i class="bi bi-people-fill"></i> Kelola Kasir
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
+                        <i class="bi bi-cup-straw"></i> Kelola Menu
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('admin.sales.recap') ? 'active' : '' }}" href="{{ route('admin.sales.recap') }}">
+                        <i class="bi bi-journal-text"></i> Rekap Penjualan
+                    </a>
+                </li>
+            </ul>
         </div>
 
-        <!-- Navigation -->
-        <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">
-                    <i class="bi bi-speedometer2"></i> Dashboard
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}" href="{{ route('admin.users.index') }}">
-                    <i class="bi bi-people-fill"></i> Kelola Kasir
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}" href="{{ route('admin.products.index') }}">
-                    <i class="bi bi-cup-straw"></i> Kelola Menu
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('admin.sales.recap') ? 'active' : '' }}" href="{{ route('admin.sales.recap') }}">
-                    <i class="bi bi-journal-text"></i> Rekap Penjualan
-                </a>
-            </li>
-        </ul>
-        </div>
-
-        <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Navigation -->
             <nav class="top-nav">
+                <button class="sidebar-toggle" id="sidebar-toggle-button">
+                    <i class="bi bi-list"></i>
+                </button>
                 <ul class="navbar-nav">
                     @auth
                     <li class="nav-item dropdown">
@@ -146,9 +151,26 @@
                 </ul>
             </nav>
 
-            <!-- Halaman Utama -->
             @yield('content')
         </main>
     </div>
+    
+    <script>
+        const sidebar = document.getElementById('sidebar');
+        const openButton = document.getElementById('sidebar-toggle-button');
+        const closeButton = document.getElementById('sidebar-close-button');
+
+        if(openButton) {
+            openButton.addEventListener('click', function() {
+                sidebar.classList.add('show');
+            });
+        }
+
+        if(closeButton) {
+            closeButton.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+            });
+        }
+    </script>
 </body>
 </html>

@@ -99,7 +99,7 @@
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <div class="card shadow-sm rounded-4">
+    <div class="table-responsive">
         <div class="card-body">
             <table class="table table-hover align-middle">
                 <thead class="table-light">

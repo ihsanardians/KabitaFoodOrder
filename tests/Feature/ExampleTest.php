@@ -2,18 +2,23 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test; // Menggunakan sintaks modern
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
-     * A basic test example.
+     * Pastikan halaman utama dialihkan ke halaman menu.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    #[Test]
+    public function root_url_redirects_to_customer_menu(): void
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        // Memastikan halaman root dialihkan ke rute 'customer.menu.index'
+        $response->assertRedirect(route('customer.menu.index'));
     }
 }
